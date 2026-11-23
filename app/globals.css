@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ *  Ayaan Mandelia — design tokens
+ *  Dark, maximalist, Indian-royal but disciplined.
+ *  Brief in his words: "royal maximalist Indian, but minimalist at the
+ *  same time — black, a nice cherry or regal red, blues, rich moody
+ *  vibrant colours. Not white — white makes me feel like a hospital."
+ *  Reference: the Sabyasachi store. Warm, low, jewel-lit; antique gold
+ *  as the single ornament. Token NAMES are unchanged so every existing
+ *  utility class (bg-paper, text-ink, text-bronze…) reskins in place.
+ * ------------------------------------------------------------------ */
+
+@theme {
+  /* Surfaces — deep warm near-black, layered like a dim room, not flat */
+  --color-paper: #14100e;
+  --color-paper-2: #1c1613;
+  --color-paper-3: #251c18;
+
+  /* Ink — warm bone/ivory light through to faint, on dark */
+  --color-ink: #efe6d6;
+  --color-ink-soft: #c3b6a1;
+  --color-ink-faint: #8b7f6d;
+  --color-ink-ghost: #5f564a;
+
+  /* The single ornament — antique gold. Reads on the dark ground and
+     carries small marks/marginalia. (Repurposes the old "bronze" token.) */
+  --color-bronze: #c8a04e;
+  --color-bronze-deep: #e0be6f;
+
+  /* Jewel accents — a regal cherry red and a deep midnight blue. Used in
+     glows and rules, sparingly, for the moody-vibrant richness. */
+  --color-crimson: #8e1f2d;
+  --color-crimson-bright: #b8323f;
+  --color-midnight: #16233f;
+
+  /* Hairlines — warm gold, low opacity in use */
+  --color-line: #c8a04e;
+
+  --font-display: var(--font-fraunces), Georgia, serif;
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-jetbrains), ui-monospace, monospace;
+
+  --tracking-mono: 0.12em;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-feature-settings: "ss01", "cv01";
+  overflow-x: hidden;
+}
+
+/* Background field — a fine gold jaali (lattice) laid over a deep, settled
+   atmosphere. This is the "rich, not plain" layer: intentional pattern, not
+   floating blobs. Fixed so the whole site sits inside one continuous room. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--color-paper);
+  background-image:
+    /* deep vignette — darker at the edges, holds the frame */
+    radial-gradient(130% 100% at 50% 42%, transparent 46%, rgba(0, 0, 0, 0.5) 100%),
+    /* a single low cherry warmth rising from the fold */
+    radial-gradient(120% 90% at 50% 128%, color-mix(in srgb, var(--color-crimson) 30%, transparent) 0%, transparent 62%),
+    /* a breath of midnight at the crown */
+    radial-gradient(120% 80% at 50% -25%, color-mix(in srgb, var(--color-midnight) 42%, transparent) 0%, transparent 55%);
+  background-size: cover, cover, cover;
+  background-repeat: no-repeat;
+}
+
+/* The jaali — an interlocking gold trellis, kept whisper-faint so it reads
+   as texture in the dark, never as a busy foreground. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.05;
+  mix-blend-mode: screen;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%23c8a04e' stroke-width='0.75'%3E%3Cpath d='M36 4L68 36 36 68 4 36Z'/%3E%3Ccircle cx='36' cy='36' r='3'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 72px 72px;
+}
+
+/* A thin gilt frame, held just inside the viewport — the editorial "plate"
+   border. Sits above content atmosphere, below interactive UI. */
+body {
+  --frame: clamp(10px, 1.6vw, 22px);
+}
+.gilt-frame {
+  position: fixed;
+  inset: var(--frame);
+  z-index: 40;
+  pointer-events: none;
+  border: 1px solid color-mix(in srgb, var(--color-bronze) 14%, transparent);
+}
+
+::selection {
+  background: var(--color-crimson-bright);
+  color: var(--color-ink);
+}
+
+/* ------------------------------------------------------------------ *
+ *  Ornament
+ * ------------------------------------------------------------------ */
+
+/* Gilt drop cap for lead paragraphs. */
+.dropcap::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-weight: 500;
+  font-size: 3.4em;
+  line-height: 0.82;
+  padding: 0.06em 0.14em 0 0;
+  color: var(--color-bronze-deep);
+}
+
+/* A section rule with a centred lozenge — replaces the plain hairline. */
+.deco-rule {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  color: color-mix(in srgb, var(--color-bronze) 55%, transparent);
+}
+.deco-rule::before,
+.deco-rule::after {
+  content: "";
+  height: 1px;
+  flex: 1;
+  background: linear-gradient(
+    to var(--dir, right),
+    color-mix(in srgb, var(--color-bronze) 40%, transparent),
+    transparent
+  );
+}
+.deco-rule::after {
+  --dir: left;
+}
+.deco-rule > .lozenge {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  transform: rotate(45deg);
+  border: 1px solid color-mix(in srgb, var(--color-bronze) 70%, transparent);
+}
+
+/* ------------------------------------------------------------------ *
+ *  Utilities
+ * ------------------------------------------------------------------ */
+
+@layer utilities {
+  /* Readable measure for running text — caps line length on wide screens. */
+  .measure {
+    max-width: 62ch;
+  }
+  .measure-tight {
+    max-width: 48ch;
+  }
+
+  /* Section rhythm tuned for laptop heights (768–982px) so content reaches
+     above the fold instead of being pushed down by oversized padding. */
+  .section {
+    padding-top: clamp(3.5rem, 6vw, 6rem);
+  }
+  .section-tight {
+    padding-top: clamp(2.5rem, 4vw, 4rem);
+  }
+
+  .mono {
+    font-family: var(--font-mono);
+    letter-spacing: var(--tracking-mono);
+    text-transform: uppercase;
+  }
+
+  .hairline {
+    border-color: color-mix(in srgb, var(--color-line) 22%, transparent);
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-pretty {
+    text-wrap: pretty;
+  }
+
+  /* Editorial figure numerals — old-style, tabular where useful */
+  .nums-old {
+    font-feature-settings: "onum", "pnum";
+  }
+}
+
+/* Reduced motion — honour the reader */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
